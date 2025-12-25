@@ -1,0 +1,109 @@
+Step-by-Step Setup of ai_text_summarizer Project
+1️⃣ Create Project Folder
+
+Folder name: ai_text_summarizer
+
+Location: D:\Python Project(2026)\ai_text_summarizer
+
+This folder will contain:
+
+app.py → main Streamlit app
+
+requirements.txt → optional, for dependencies
+
+.env (optional, if using OpenAI API key)
+
+2️⃣ Install Python Packages
+
+You installed or need the following packages:
+
+Package	Purpose
+streamlit	For creating interactive web UI
+transformers	Hugging Face library for AI/NLP models
+torch	Backend for Hugging Face models
+python-dotenv	Load .env environment variables
+openai (optional)	For OpenAI GPT API (not needed if using free local summarizer)
+
+Installation command for free summarizer (no API key required):
+
+python -m pip install streamlit transformers torch python-dotenv
+
+
+Installation command if you use OpenAI API (requires key):
+
+python -m pip install streamlit openai python-dotenv
+
+3️⃣ Create app.py
+
+Minimal app structure using Hugging Face summarizer (no API key):
+
+import streamlit as st
+from transformers import pipeline
+
+st.title("🧠 Free AI Text Summarizer")
+
+@st.cache_resource
+def get_summarizer():
+    return pipeline("summarization")
+
+summarizer = get_summarizer()
+
+text = st.text_area("Paste your text here", height=250)
+
+if st.button("Summarize"):
+    if not text.strip():
+        st.warning("Please enter some text")
+    else:
+        with st.spinner("Summarizing..."):
+            summary = summarizer(text, max_length=250, min_length=50, do_sample=False)
+            st.subheader("Summary")
+            st.write(summary[0]['summary_text'])
+
+
+Optional: If using OpenAI API, you added:
+
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+4️⃣ Run the App
+
+Since streamlit may not be on PATH, run:
+
+python -m streamlit run app.py
+
+
+Streamlit will open a browser window with your summarizer.
+
+5️⃣ Optional: Create .env
+
+If using OpenAI API:
+
+OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+
+
+Then python-dotenv loads it automatically.
+
+6️⃣ Optional: Create requirements.txt
+streamlit
+transformers
+torch
+python-dotenv
+
+
+If using OpenAI:
+
+openai
+
+7️⃣ Usage
+
+Open the app in browser.
+
+Paste your text in the text area.
+
+Click Summarize.
+
+The summary appears below.
